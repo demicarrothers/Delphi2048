@@ -4,21 +4,17 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ToolWin, Vcl.ComCtrls, Vcl.Menus, About2048, Winapi.ShellAPI,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ToolWin, Vcl.ComCtrls, Vcl.Menus, About2048, Rules2048, Winapi.ShellAPI,
   Vcl.ExtCtrls, Vcl.StdCtrls, Math;
 
 type
   TForm1 = class(TForm)
     MainMenu1: TMainMenu;
     N1: TMenuItem;
-    Options1: TMenuItem;
     About1: TMenuItem;
     Help1: TMenuItem;
     NewGame1: TMenuItem;
     Rules1: TMenuItem;
-    SaveGame1: TMenuItem;
-    LoadGame1: TMenuItem;
-    Keybinds1: TMenuItem;
     ProgramInfo1: TMenuItem;
     DeveloperContact1: TMenuItem;
     Panel1: TPanel;
@@ -45,6 +41,8 @@ type
     procedure shiftTiles(direction: integer);
     procedure updateBoard();
     procedure spawnBlock();
+    procedure NewGame1Click(Sender: TObject);
+    procedure Rules1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -53,8 +51,7 @@ type
 
 var
   Form1: TForm1;
-  blocks: array[1..16] of integer;
-  canMove: array[1..16] of boolean;
+  // canMove: array[1..16] of boolean; // work on later
   var blockValue: array[1..16] of integer;
 
 implementation
@@ -65,8 +62,8 @@ procedure TForm1.shiftTiles(direction: integer);
 var
   i: Integer;
 begin
-  for i := 1 to 16 do
-  canMove[i] := True; // initialize array with all trues
+  // for i := 1 to 16 do     // deprecated until further notice
+  // canMove[i] := True; // initialize array with all trues
 
   for i := 1 to 16 do
   begin
@@ -89,13 +86,13 @@ begin
         blockValue[currentPos] := 0;
       end;
     end;
-  end;   
+  end;
 
   1:
   begin
     if (i mod 4 <> 0) then
     begin
-      var currentPos := i; 
+      var currentPos := i;
       while (currentPos mod 4 <> 0) and (blockValue[currentPos] <> 0) and (blockValue[currentPos + 1] = 0) do
       begin
         blockValue[currentPos + 1] := blockValue[currentPos];
@@ -113,16 +110,48 @@ begin
 
   4:
   begin
-    if (i <> 1) or (i / 4 <> 0) then
+    if (i <= 12) then
     begin
       var currentPos := i; // when i learn how to refactor this code i'll make this better i swear
-      while (currentPos <> 1) or (currentPos / 4 <> 0) do
-      
+      while (currentPos <= 12) and (blockValue[currentPos + 4] = 0) do
+      begin
+        blockValue[currentPos + 4] := blockValue[currentPos];
+        blockValue[currentPos] := 0;
+        currentPos := currentPos + 4
+      end;
+
+      if (currentPos <= 12) and (blockValue[currentPos] = blockValue[currentPos + 4]) then
+      begin
+        blockValue[currentPos + 4] := blockValue[currentPos] * 2;
+        blockValue[currentPos] := 0;
+      end;
     end;
-    
+
+    end;
+  -4:
+  begin
+    if (i > 4) then
+    begin
+      var currentPos := i;
+      while (currentPos > 4) and (blockValue[currentPos - 4] = 0) do
+      begin
+        blockValue[currentPos - 4] := blockValue[currentPos];
+        blockValue[currentPos] := 0;
+        currentPos := currentPos - 4;
+      end;
+
+      if (currentPos > 4) and (blockValue[currentPos] = blockValue[currentPos - 4]) then
+      begin
+        blockValue[currentPos - 4] := blockValue[currentPos] * 2;
+        blockValue[currentPos] := 0;
+      end;
+
+    end;
+
+
   end;
   end;
-  
+
 end;
 
 
@@ -201,6 +230,11 @@ begin
   Form2.Show;
 end;
 
+procedure TForm1.Rules1Click(Sender: TObject);
+begin
+  Form3.Show;
+end;
+
 procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
     case Key of
@@ -209,6 +243,14 @@ begin
     VK_LEFT, Ord('A'): shiftTiles(-1);
     VK_RIGHT, Ord('D'): shiftTiles(1);
     end;
+end;
+
+procedure TForm1.NewGame1Click(Sender: TObject);
+begin
+  var i: integer;
+  for i := 1 to 16 do
+    blockValue[i] := 0;
+    updateBoard();
 end;
 
 end.

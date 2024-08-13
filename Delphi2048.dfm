@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'Delphi048: Always In Beta!'
   ClientHeight = 431
   ClientWidth = 379
   Color = clBtnFace
@@ -303,24 +303,14 @@ object Form1: TForm1
       Caption = 'Game'
       object NewGame1: TMenuItem
         Caption = 'New Game'
-      end
-      object SaveGame1: TMenuItem
-        Caption = 'Save Game'
-      end
-      object LoadGame1: TMenuItem
-        Caption = 'Load Game'
+        OnClick = NewGame1Click
       end
     end
     object Help1: TMenuItem
       Caption = 'Help'
       object Rules1: TMenuItem
         Caption = 'Rules'
-      end
-    end
-    object Options1: TMenuItem
-      Caption = 'Options'
-      object Keybinds1: TMenuItem
-        Caption = 'Keybinds'
+        OnClick = Rules1Click
       end
     end
     object About1: TMenuItem
