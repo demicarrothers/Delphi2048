@@ -62,7 +62,6 @@ procedure TForm1.shiftTiles(direction: integer);
 var
   i, repeatVar: Integer;
 begin
-  repeatVar := 0;
   // for i := 1 to 16 do     // deprecated until further notice
   // canMove[i] := True; // initialize array with all trues
   for repeatVar := 0 to 2 do
@@ -201,23 +200,41 @@ end;
 procedure TForm1.spawnBlock();
 var
   emptySpaces: array[1..16] of Integer;
-  count, i, randomIndex: Integer;
+  count, i, randomIndex, maxValue: Integer;
 begin
   count := 0;
+  maxValue := 2; // sets this so that in case there's nothing it'll still populate w two
   for i := 1 to 16 do
   begin
     if blockValue[i] = 0 then
     begin
       Inc(count);
       emptySpaces[count] := i;
-    end;
+    end
+    else
+      if blockValue[i] > maxValue then
+        maxValue := blockValue[i];
   end;
 
   if count > 0 then
   begin
+    var stopCode : integer;
     randomize;
     randomIndex := emptySpaces[random(Count) + 1];
-    blockValue[randomIndex] := IfThen(random(10) = 0, 4, 2); // 90% chance of 2, 10% of 4
+    if maxValue >= 16 then
+    begin
+      repeat
+        stopCode := round(random(20) + 1); // small chance of new tile being maxValue
+        if stopCode <> 1 then
+          maxValue := maxvalue div 2; // are you kidding me this could have used div instead
+      until ((stopCode = 1) or (maxValue = 2));
+      blockValue[randomIndex] := maxValue
+    end
+
+    else
+
+      blockValue[randomIndex] := 2;
+
   end;
 end;
 

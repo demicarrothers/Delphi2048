@@ -1,4 +1,4 @@
-unit About2048;
+unit Rules2048;
 
 interface
 
@@ -7,12 +7,10 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
 
 type
-  TForm2 = class(TForm)
+  TForm3 = class(TForm)
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
   private
     { Private declarations }
   public
@@ -20,11 +18,10 @@ type
   end;
 
 var
-  Form2: TForm2;
+  Form3: TForm3;
 
 implementation
 
 {$R *.dfm}
-
 
 end.
